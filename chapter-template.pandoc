@@ -1,0 +1,34 @@
+\documentclass[article]{clpsthesis}
+
+\ifbool{clpsarticle}{
+  \usepackage[english]{babel}
+}{}
+
+$if(title)$
+$if(fileid)$
+\def\$fileid$title{$title$}
+\metactitle{\$fileid$title}
+$endif$
+$endif$
+$for(bibliography)$
+\addbibresource{bibliographies/$bibliography$}
+$endfor$
+$if(header-includes)$
+% preamble included from yaml header
+$for(header-includes)$
+$header-includes$
+$endfor$
+$endif$
+\begin{document}
+$if(fileid)$
+\ctitle{\$fileid$title}\label{chapter:$fileid$}
+$endif$
+$if(citekey)$
+\entryfootnote{\fullcite{$citekey$}}
+$endif$
+
+$if(docnote)$
+\entryfootnote{$docnote$}
+$endif$
+$body$
+\end{document}

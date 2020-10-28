@@ -1,0 +1,60 @@
+#!/usr/bin/env python
+
+import git
+import os.path
+from subprocess import run
+import optparse
+
+def get_modified_files():
+    repo = git.Repo()
+    return [item.a_path for item in repo.index.diff(None)]
+
+def get_staged_files():
+    repo = git.Repo()
+    return [item.a_path for item in repo.index.diff('HEAD')]
+
+def filter_md(l):
+    return [i for i in l
+            if os.path.split(i)[0] == 'chapters'
+                and os.path.splitext(i)[1] == '.md']
+
+def run_pandoc(source):
+    dest = os.path.splitext(source)[0] + ".tex"
+    p = run(['pandoc',
+             '--wrap=preserve',
+             '--biblatex',
+             '-f', 'markdown-auto_identifiers',
+             '--template=chapter-template.pandoc',
+             '--filter=pandoc-include',
+             '-o', dest,
+             source
+             ])
+    if p.returncode == 0:
+        return dest
+
+def add_to_stage(path):
+    repo = git.Repo()
+    repo.index.add(path)
+
+def process(source, stage):
+    print(f'Running pandoc on {source}...')
+    if dest := run_pandoc(source):
+        if stage:
+            print(f'Adding {dest} to staging area...')
+            add_to_stage(dest)
+
+if __name__ == "__main__":
+    oparser = optparse.OptionParser()
+    oparser.add_option('-m', action='store_true', dest='modified')
+    oparser.add_option('--no-stage', action='store_false', dest='stage', default=True)
+    (options, args) = oparser.parse_args()
+
+    if args not in [[''], []]:
+        process(args[0] + '.md', options.stage)
+    else:
+        staged_md = set(filter_md(get_staged_files()))
+        modified_md = (set(filter_md(get_modified_files())) if options.modified else set())
+        files = staged_md.union(modified_md)
+
+        for modified_md in files:
+            process(modified_md, options.stage)

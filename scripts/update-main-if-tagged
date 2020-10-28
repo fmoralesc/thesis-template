@@ -1,0 +1,59 @@
+#!/usr/bin/env python
+
+import git
+import re
+import os.path
+from subprocess import run
+
+MAINFILE = 'main.pdf'
+
+
+def current_commit():
+    r = git.Repo()
+    return r.commit(r.active_branch)
+
+
+def commit_message_matches(commit):
+    return re.match('^\[newver\]', commit.message)
+
+
+def add_to_stage(path):
+    r = git.Repo()
+    r.index.add(path)
+
+
+def commit_newver():
+    r = git.Repo()
+    short_hash = r.git.rev_parse('--short', 'HEAD')
+    msg = f'Updated {MAINFILE} from {short_hash}'
+    print(msg)
+    r.git.commit('-m', msg)
+    return short_hash
+
+
+def create_tag(idhash):
+    r = git.Repo()
+    r.create_tag("auto/" + str(idhash))
+
+
+def push_new(idhash):
+    r = git.Repo()
+    r.git.push('origin', 'master')
+    r.git.push('origin', 'auto/'+ str(idhash))
+
+if __name__ == "__main__":
+    cc = current_commit()
+    if commit_message_matches(cc):
+        if not os.path.exists(MAINFILE) or \
+                os.path.getmtime(MAINFILE) < cc.committed_date:
+            print(f'New version tag found and old file. Compiling...')
+            # compile main file
+
+            run(['make'])
+            # add it to the staging area
+            add_to_stage(MAINFILE)
+            # commit
+            idhash = commit_newver()
+            create_tag(idhash)
+            # push
+            push_new(idhash)

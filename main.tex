@@ -1,0 +1,48 @@
+\documentclass[11pt]{clpsthesis}
+
+\usepackage[english]{babel}
+
+\usepackage[pangram,math]{blindtext}
+
+\addbibresource{bibliographies/sample.bib}
+
+% metadata: overrided project.conf file
+\def\mainauthor{Author}
+\def\maintitle{Thesis}
+\def\maindate{\today}
+\def\thesissupervisor{Super Visor}
+\def\thesischair{Stan Dingstool}
+\def\thesisdegree{Eleventh Degree (11th)}
+\def\thesisinstitution{Life's School}
+\def\thesisexternalexaminer{Mr. Magoo}
+\def\thesiscommittee{}
+\listadd{\thesiscommittee}{Reviewer Numero Uno}
+\listadd{\thesiscommittee}{You know who}
+
+
+\begin{document}
+\thesistitlepage
+
+\dedication[to]{Someone important}
+
+\frontmatter
+
+\chapter{Abstract}
+\newpage
+
+\tableofcontents
+
+\chapter{Preface}
+
+This is a sample text for the \textsf{clpsthesis} class, cf. \cite{Author2020}.\footnote{This is a footnote.}
+
+\mainmatter
+
+\blinddocument
+
+\backmatter
+
+\printbibliography
+
+
+\end{document}

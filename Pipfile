@@ -1,0 +1,17 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+neovim = "*"
+
+[packages]
+pandoc-include = "*"
+gitpython = "*"
+gitdb = "*"
+pandoc = {git = "https://github.com/boisgera/pandoc.git"}
+titlecase = "*"
+
+[requires]
+python_version = "3.8"
