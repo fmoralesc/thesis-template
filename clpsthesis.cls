@@ -42,9 +42,9 @@
 % Sizes
 \ifbool{clpsfinal}
 {
-	% Final version is 24x16cm (ADS recommendation)
-	\setstocksize{24cm}{16cm}
-	\settrimmedsize{24cm}{16cm}{*}
+	% Final version is 23x15cm (octavo)
+	\setstocksize{23cm}{15cm}
+	\settrimmedsize{23cm}{15cm}{*}
 	\semiisopage[10]
 	\checkandfixthelayout
 }{}

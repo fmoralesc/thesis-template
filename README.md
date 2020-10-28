@@ -103,6 +103,15 @@ powerful `memoir` class on which it is based. It also uses:
 
 ## Building the files
 
+Compilation of files using this template requires a python environment because
+of the use of some special scripts (more details below). To activate this
+environment, use `pipenv`:
+
+``` sh
+pipenv install
+pipenv shell 
+```
+
 There is a `Makefile` provided. To build the main text:
 
 ```sh
